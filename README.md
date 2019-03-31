@@ -12,8 +12,9 @@
 
 下面分别从召回和排序两个方面介绍推荐算法。
 
-# [常用的召回算法][1]
+# [Recall][1]
 
 # [Rank][2]
 
 [1]: https://github.com/pengxiaoo/recommender-system/blob/master/docs/recall.md
+[2]: https://github.com/pengxiaoo/recommender-system/blob/master/docs/rank.md
