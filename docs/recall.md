@@ -1,9 +1,9 @@
 ## 常用的召回算法
 
-### 1.UserCF 
+### 1. UserCF 
 即基于User的协同过滤（Collaborative Filtering）。UserCF的思路是向目标用户推荐跟他兴趣相似的用户所喜欢的item。所以UserCF通常包含两个过程：
-#### 1.找到跟目标用户兴趣相似的用户集合
-#### 2.找到该集合中的用户喜欢的，而目标用户尚未接触过的item并推荐给目标用户
+#### 1).找到跟目标用户兴趣相似的用户集合
+#### 2).找到该集合中的用户喜欢的，而目标用户尚未接触过的item并推荐给目标用户
 
 用户之间的similarity是通过用户的行为统计得到的。这里的行为指的是用户对item的点击、浏览、购买、评分等行为（通常点击、浏览被称为隐性行为，这类行为携带信息量小，但由于发生频率高，数据量大，因而也具有统计价值；购买、评分被称为显性行为，这类行为更直接反映了用户喜好，但是发生频次较低，数据规模较小）。例如基于点击行为计算用户的Jaccard similarity：
 >* 有两个用户user1和user2，他们各自点击过的item集合分别是S1和S2，那么user1和user2的Jaccard similarity可以定义为S1和S2交集的模除以S1和S2并集的模。
@@ -21,7 +21,7 @@ user CF的计算方式如下（以点击行为为例）：
 
 UserCF的可解释性较好，推荐理由可以是“跟你兴趣类似的人也喜欢”这种。
 
-### 2.ItemCF
+### 2. ItemCF
 ItemCF的思路是给用户推荐跟他之前喜欢的item类似的item。对于一个item i，找到与其相似的一个item集合I，然后把I推荐给喜欢i的人。这里item之间的相似度是通过user对它们的行为来判定的，itemCF假设，如果有很多人同时喜欢item a和item b，那么说明a和b具有较高的similarity。
 
 itemCF的计算类似userCF，只不过需要计算的是item-item相似度矩阵而非user-user相似度矩阵。itemCF优于userCF的地方：
@@ -36,7 +36,7 @@ itemCF也有缺点，比如缺乏新颖性，时常会推荐一些重复雷同�
 
 itemCF和userCF有很多共同的特点，比如都没有学习过程，不需要迭代；都需要遍历样本集，构造相似度矩阵和相关表；都不需要user和item的属性特征；都可以根据新增样本进行增量更新；都有冷启动的问题；都需要大量的数据样本才能捕获user或item的相似度关系并得到较好的推荐效果。
 
-### 3.隐语义模型（Latent Factor Model）
+### 3. 隐语义模型（Latent Factor Model）
 在itemCF或userCF中，item和user都被表征为高维one-hot vector。one-hot vector是无法直接计算similarity的，因而itemCF和userCF都采用了”曲线救国“的方式计算similarity：把每个item表征成一组users，在user空间计算item的similarity；或者把每个user表征成一组items，在item空间计算user的similarity，两个空间通过用户的行为联系起来。因此itemCF和userCF都被称为是基于邻域的推荐。
 
 而隐语义模型采用了不同的思路，它借鉴了NLP中的embedding的思想，把item和user同时从高维稀疏one-hot vector转化为低维稠密latent vector，相当于把item空间和user空间投影到同一个低维度latent空间，从而可以直接计算item-item、user-user、item-user的similarity。
@@ -55,7 +55,7 @@ itemCF和userCF有很多共同的特点，比如都没有学习过程，不需�
 
 隐语义模型的缺点是可解释性较差；另外对于新增的样本没办法增量计算，只能从头批量计算。
 
-### 4.Personal Rank
+### 4. Personal Rank
 Personal Rank是一种基于二分图的模型，该模型的提出是受到了著名的Page Rank算法的启发。图中有两类顶点，分别是user顶点和item顶点，图中的每一条边都连接了一个user顶点和一个item顶点。如下图，黑色圆代表user，白色方框代表item，user和item之间的边代表该user对该item产生过行为。
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/personal_rank.png)
 在Personal Rank算法中，找到一个user的topN like，就是找到跟user不直接相连，并且相关度最高的N个item顶点。
@@ -72,7 +72,7 @@ Personal Rank对每一个user进行推荐都要全图迭代，比较耗时。工
 
 注：上面的示例图来自于项亮的《推荐系统实践》一书。
 
-### 5.item2vec
+### 5. item2vec
 item2vec是一篇2016年的论文[item2vec: neural item embedding for collaborative filtering][1]提出的一种召回算法。它针对电商购物场景，模仿NLP里著名的word embedding算法[word2vec][2]，把每个订单对应的购物篮中的所有items视作一个item set，这个item set就相当于word2vec里的一个context window，item set当中的items相当于位于同一个context window内的words。word2vec的目标函数是给定center word下最大化context words的条件概率，而item2vec的目标函数则是给定item set下最大化不同items共现的条件概率。除了目标函数稍有不同之外，item2vec和word2vec的训练方式几乎是一样的，可以直接用现有的word2vec工具包来训练item2vec。论文中拿item2vec和一种基于SVD分解的隐语义模型做性能对比，item2vec在准确率上更胜一筹。
 
 item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2vec套用了一下，把item从高维one-hot vector embedding成低维稠密vector。不过item2vec可以直接在word2vec工具包上训练，不需要太多额外开发工作，这是其一大优势。item2vec适用范围较窄，主要适合的场景是电商中的购物篮分析。
@@ -80,7 +80,7 @@ item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2v
 [1]:https://arxiv.org/pdf/1603.04259.pdf
 [2]:https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
 
-### 6.content-based recommendation
+### 6. content-based recommendation
 除了上述几种召回算法之外，还有一种重要的召回算法叫做基于内容特征的召回，即content-based recommendation。基于内容的召回的思路是：
 >* 对user和item分别做feature提取，离线建立user->feature正排表和feature->item倒排表，加好索引，然后放入数据库或内存
 >* 如果要对某个user做推荐，在线读取user->feature正排表和feature->item倒排表，直接构造user->item形成推荐结果
