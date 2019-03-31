@@ -16,4 +16,4 @@
 
 # [Rank][2]
 
-[1]: https://github.com/pengxiaoo/recommender-system/blob/master/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0.md
+[1]: https://github.com/pengxiaoo/recommender-system/blob/master/docs/recall.md
