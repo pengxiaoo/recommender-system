@@ -18,8 +18,8 @@
 >* 生成user画像和item特征、user和item之间的关系，有时甚至直接生成候选集
 >* 对生成好的特征和候选集建立索引，写入数据库（如redis）
 
-对于离线生成的特征如何高效的建立索引，是召回算法至关重要的一环，索引的查询性能直接影响了后续排序算法的耗时。索引通常分两大类：一类是B树，这也是大多数数据库内建的索引方式，对于结构化、半结构化的数据非常有效；另一大类是基于近似最近邻的哈希算法（Hashing algorithms for Approximate Nearest
-Neighbor Search），对于非结构化的数据例如文本、图片非常有效。基于近似最近邻的哈希的具体实现根据数据的类型不同而不同，例如geo信息可以通过GeoHash、文本可以通过SimHash、图片可以通过CNN bottleneck layer的encoding并结合LSH(Locality Sensitive Hashing)来实现。
+对于离线生成的特征如何高效的建立索引，是召回算法至关重要的一环，索引的查询性能直接影响了后续排序算法的耗时。索引通常分两大类：一类是B树，这也是大多数数据库内建的索引方式，对于结构化、半结构化的数据非常有效；另一大类是近似最近邻哈希算法（Hashing algorithms for Approximate Nearest
+Neighbor Search），对于非结构化的数据例如文本、图片非常有效。根据数据类型的不同，近似最近邻哈希也有不同的实现方式，例如geo信息可以通过GeoHash、文本可以通过SimHash、图片可以通过CNN bottleneck layer的encoding并结合LSH(Locality Sensitive Hashing)来实现。
 
 在工业界实际应用中，很少单独采用一种或两种召回算法，通常采用多种召回算法并行的架构，每种召回算法独立运行产生召回结果，最后merge起来然后喂给Rank模块。
 
