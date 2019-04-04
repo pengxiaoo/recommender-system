@@ -82,8 +82,8 @@ item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2v
 
 ### 6. content-based recommendation
 除了上述几种召回算法之外，还有一种重要的召回算法叫做基于内容特征的召回，即content-based recommendation。基于内容的召回的思路是：
->* 对user和item分别做feature提取，离线建立user->feature正排表和feature->item倒排表，加好索引，然后放入数据库或内存
->* 如果要对某个user做推荐，在线读取user->feature正排表和feature->item倒排表，直接构造user->item形成推荐结果
+>* 对user和item分别做feature提取，离线建立user->feature映射表和feature->item映射表，加好索引，然后放入数据库或内存
+>* 如果要对某个user做推荐，在线读取user->feature映射表和feature->item映射表，直接构造user->item形成推荐结果
 
 不同于之前的召回算法，content-based需要对user进行画像，对item进行特征提取，因此需要较多的数据预处理和特征工程工作。user画像既包括对user浏览点击历史的统计，也包括用户本身的固有属性，例如用户的年龄，性别，职业等；对item的特征提取，主要包括topic和genre的finding，给item打上标签。以文本类的item为例，特征提取可以包括词库表的建立，命名实体识别，关键词排序等等。
 
