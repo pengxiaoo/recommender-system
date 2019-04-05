@@ -1,4 +1,4 @@
-# Learning to Rank
+# 常用的机器学习排序算法
 
 根据模型不同，常见的L2R可以分为LR(Logistic Regression)，gbdt，LR与gbdt的组合，以及深度学习模型等
 ## LR
