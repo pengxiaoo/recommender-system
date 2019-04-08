@@ -47,6 +47,7 @@ DCG假定一个排序结果的总评分由该排序结果中每个document的评
 pointwise方法就是独立计算每一个document的相关度得分，然后将不同documents按得分高低排序。pointwise方法的损失函数定义如下
 
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pointwise-loss.png)
+
 对于一个特定的query，每一个document独立计算loss，然后将计算结果累加起来。pointwise loss相当于1 - nDCG的上界。
 
 从实践的角度，pointwise方法既可以建模成回归问题（如果预测目标为连续值），也可以建模成分类问题（如果预测目标为相关度级别的label）。
