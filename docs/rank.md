@@ -3,8 +3,6 @@
 
 document和query的相关度可以定义为f(q,d)，q代表一个query，d代表一个document，f(q,d)取实数值，当q和d相关程度越高时f值越大。f(q,d)通常被称为排序模型。这样一个排序问题就可定义为给定query和documents，如何找到最优的排序模型f(q,d)。而学习排序就是用有监督学习的方式，自动找到最优的排序模型。
 
-关于学习排序的formulation，可以参考文章[A Short Introduction to Learning to Rank][1]。
-
 由于学习排序最初起源于信息检索领域，因此学习排序相关的文献通常会沿用信息检索系统中的术语，例如query和document，本文也将如此。query和document分别对应于推荐系统术语中的user和item。
 
 ## 测试集和训练集
@@ -45,13 +43,16 @@ DCG假定一个排序结果的总评分由该排序结果中每个document的评
 
 ### Pointwise
 pointwise的损失函数定义如下
+
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pointwise-loss.png)
 
 ### Pairwise
 pairwise的损失函数定义如下
+
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pairwise-loss.png)
 ### Listwise
 listwise的损失函数定义如下
+
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/listwise-loss.png)
 
 [1]: http://times.cs.uiuc.edu/course/598f14/l2r.pdf
