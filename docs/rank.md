@@ -41,20 +41,29 @@ DCG假定一个排序结果的总评分由该排序结果中每个document的评
 
 在介绍三种分类之前，我们先调整一下术语和符号，以便更符合机器学习的传统。我们把排序模型f(q,d)写成f(x)，其中x代表由q和d联合组成的特征；同时把label写成y。
 
-### Pointwise
-pointwise的损失函数定义如下
-
+### Pointwise方法
+pointwise方法的损失函数定义如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pointwise-loss.png)
+对于一个特定的query，每一个document独立计算loss，然后将计算结果累加起来。pointwise loss相当于1 - nDCG的上界。
 
-### Pairwise
-pairwise的损失函数定义如下
+从实践的角度，pointwise方法就是独立计算每一个document的相关度得分，然后将不同documents按得分高低排序。pointwise方法既可以建模成回归问题（如果预测目标为连续值），也可以建模成分类问题（如果预测目标为相关度级别的label）。
 
+pointwise方法比较简单易行，在实际中应用的也较为广泛。依据采用的模型不同，可以分为
+>* 单一浅层模型：例如LR，FM，SVM。特点是速度快，支持特征的维度高，但是需要特征筛选、特征的归一化和离散化，对工程师的特征工程能力有较高要求。另外LR难以捕获交叉特征的影响。
+>* 树模型：例如随机森林，gbdt。树模型不需要特征归一化和特征筛选，有比较强的特征筛选能力。
+>* gbdt和LR的组合。这个方法源自一篇著名的文章[Practical Lessons from Predicting Clicks on Ads at Facebook][3]，其中gbdt用来抽取特征，LR基于gbdt输出的特征进行分类。性能好过单一模型。但是由于经历了两层模型，推荐结果可解释性较差。
+>* 神经网络模型：业界主排序模型中，基于神经网络的深度学习模型现在得到了越来越多的采用。例如[美团“猜你喜欢”深度学习排序模型实践][4]这篇文章提到了基于Multi-task DNN的深度学习排序。
+
+
+### Pairwise方法
+pairwise方法的损失函数定义如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pairwise-loss.png)
-### Listwise
-listwise的损失函数定义如下
 
+### Listwise方法
+listwise方法的损失函数定义如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/listwise-loss.png)
 
 [1]: http://times.cs.uiuc.edu/course/598f14/l2r.pdf
 [2]: https://tech.meituan.com/2018/12/20/head-in-l2r.html
 [3]: https://quinonero.net/Publications/predicting-clicks-facebook.pdf
+[4]: https://tech.meituan.com/2018/03/29/recommend-dnn.html
