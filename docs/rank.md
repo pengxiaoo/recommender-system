@@ -63,7 +63,7 @@ pointwise方法比较简单易行，在实际中应用的也较为广泛。依�
 
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pairwise-loss.png)
 其中sign(yi-yj)代表documenti和documentj的顺序先后关系，f(xi)-f(xj)代表documenti和documentj的得分高低关系。
-Φ代表了如果documenti和documentj的顺序先后关系与得分高低关系不兼容，那么需要付出多大的损失。根据Φ的定义方式不同，pairwise方法有不同的实现：
+Φ代表了如果documenti和documentj的顺序先后关系与得分高低关系不兼容，那么需要付出多大的损失。类似pointwise loss，pairwise loss也相当于1 - nDCG的上界。根据Φ的定义方式不同，pairwise方法有不同的实现：
 >* Ranking SVM，Φ定义为hinge loss
 >* RankingBoost，Φ定义为exponential loss
 >* RankingNet，Φ定义为logistic loss
@@ -73,7 +73,7 @@ pointwise方法对每个document独立算分，pairwise方法对每一对documen
 
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/listwise-loss.png)
 
-listwise把学习排序作为Structured Learning问题直接求解，充分利用了每一条training data当中documents列表的结构信息，损失函数的定义也跟nDCG直接相关，因而可以获得比pointwise和pairwise更好的排序结果。常用的listwise方法有AdaRank，ListNet，SVM MAP等等。
+与pointwise和pairwise把原始问题拆分简化求解不同，listwise把学习排序作为Structured Learning问题直接求解，充分利用了每一条training data当中documents列表的结构信息，损失函数的定义也跟nDCG直接相关，因而可以获得比pointwise和pairwise更好的排序结果。常用的listwise方法有AdaRank，ListNet，SVM MAP等等。
 
 
 [1]: http://times.cs.uiuc.edu/course/598f14/l2r.pdf
