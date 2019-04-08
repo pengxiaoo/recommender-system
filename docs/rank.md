@@ -22,7 +22,7 @@ document和query的相关度可以定义为f(q,d)，q代表一个query，d代表
 >* 要便于计算。
 
 排序学习中常用的评估准则有AUC，DCG，nDCG，MAP(Mean Average Precision)等等
-### AUC(Area Under ROC)
+### AUC(Area Under ROC curve)
 AUC是点击率预估问题中常用的评估准则，对于排序学习而言也有一定的参考价值。直观上理解，AUC代表任意取一对正负样本(q,d+)和(q,d-)，正样本相关度得分大于负样本的概率（这里正样本d+代表对于给定的query，用户确实点击了该document；而负样本d-代表该document没有获得用户点击）。AUC的计算方法如下：
 >* 遍历正负样本，将正样本和负样本两两组对[pair1,pair2,...,pairP]，P代表总的pair数；
 >* 遍历每一个pair，如果该pair中正样本的得分大于负样本的得分，那么认为该pair被正确判断；
