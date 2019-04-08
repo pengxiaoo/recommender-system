@@ -26,8 +26,8 @@ document和query的相关度可以定义为f(q,d)，q代表一个query，d代表
 DCG假定一个排序结果的总评分由该排序结果中每个document的评分累加得到；每个document的评分由该document与query的相关度，以及该document在排序结果中的位置决定。DCG的公式如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/DCG.png)
 上式中，p代表DCG是针对排序结果前p个documents计算得到的；reli代表第i个document与query的相关度；分母的log的意义是对每一个document的权重按照位置进行对数衰减。
-### NDCG(Normalized DCG)
-在实际应用中，不同query对应的documents列表长度往往差别较大，因此DCG指标需要进行归一化。常用的归一化方法是用原始DCG除以IDCG，其中IDCG是指query对应的前p条documents的完美排序列表的DCG值。原始DCG除以IDCG的结果被称为NDCG(Normalized DCG)。
+### nDCG(normalized DCG)
+在实际应用中，不同query对应的documents列表长度往往差别较大，因此DCG指标需要进行归一化。常用的归一化方法是用原始DCG除以IDCG，其中IDCG是指query对应的前p条documents的完美排序列表的DCG值。原始DCG除以IDCG的结果被称为nDCG(normalized DCG)。
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/IDCG.png)
 ### AUC(Area Under ROC)
 
