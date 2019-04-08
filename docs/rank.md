@@ -39,10 +39,14 @@ DCG假定一个排序结果的总评分由该排序结果中每个document的评
 可以看出，nDCG的取值范围在0到1之间。
 
 ## 学习排序的分类
-理想情况下，学习排序的loss function可定义为1 - nDCG。当nDCG=1的时候为完美排序，此时获得zero loss。不过在实践中，loss function有时会采用简化的定义方式。根据损失函数定义方式的不同，学习排序可以分为三类：Pointwise方法，Pairwise方法，Listwise方法
+理想情况下，学习排序的loss function可定义为1 - nDCG。当nDCG=1的时候为完美排序，此时获得zero loss。不过在实践中，loss function有时会采用简化的定义方式。根据损失函数定义方式的不同，学习排序可以分为三类：Pointwise方法，Pairwise方法，Listwise方法。
+
+在介绍三种分类之前，我们先调整一下术语和符号，以便更符合机器学习的传统。我们把排序模型f(q,d)写成f(x)，其中x代表由q和d联合组成的特征；同时把label写成y。
+
 ### Pointwise
 pointwise的损失函数定义如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pointwise-loss.png)
+
 ### Pairwise
 pairwise的损失函数定义如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pairwise-loss.png)
