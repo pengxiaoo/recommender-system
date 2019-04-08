@@ -15,26 +15,40 @@ document和query的相关度可以定义为f(q,d)，q代表一个query，d代表
 学习排序的每一条testing data形如(q,T=[t1,t2,..,tm])，其中q为query，T为候选documents的集合。如前所述，学习排序的训练目标是获得最优的排序模型f(q,d)。当训练完成并进入inference阶段时，排序模型会对每一对候选的(q,d=ti)进行打分，从而得到相关度从高到低的排序。
 
 ## 排序模型的评估
-排序模型的评估标准需要满足几个要求：
+理想情况下，排序模型的评估标准需要满足几个要求：
 >* 倾向于选择能把相关度高的document排在前面的排序模型。
 >* 当列表中documents顺序不对的时候，也能对列表的排序做出合理的打分。例如已知ground truth是，某个query对应的top3 documents分别是d1,d2,d3，那么对于d1,d3,d2和d3,d2,d1这两个排序，能判断出前者优于后者。
 >* 要考虑到不同位序的影响权重的不同。例如，假如最终排序结果是长度为100的document列表，那么前10个documents当中出现错序要比第91到第100个document当中出现错序更加严重。
 >* 要便于计算。
 
-排序学习中常用的评估准则有DCG，NDCG，AUC，MAP(Mean Average Precision)等等
-### DCG(Discounted Cumulative Gain)
-
-### NDCG(Normalized DCG)
-
+排序学习中常用的评估准则有AUC，DCG，NDCG，MAP(Mean Average Precision)等等
 ### AUC(Area Under ROC)
+AUC是点击率预估问题中常用的评估准则，对于排序学习而言也有一定的参考价值。直观上理解，AUC代表任意取一对正负样本(q,d+)和(q,d-)，正样本相关度得分大于负样本的概率（这里正样本d+代表对于给定的query，用户确实点击了该document；而负样本d-代表该document没有获得用户点击）。AUC的计算方法如下：
+>* 遍历正负样本，将正样本和负样本两两组对[pair1,pair2,...,pairP]，P代表总的pair数；
+>* 遍历每一个pair，如果该pair中正样本的得分大于负样本的得分，那么认为该pair被正确判断；
+>* 被正确判断的pair个数除以总的pair个数P，就是AUC。
+可以看出，AUC的取值范围介于0到1之间。对于完美排序，AUC取值为1；如果是顺序是完全随机的，AUC取值为0.5左右。AUC的缺点是没有考虑到位序对评分权重的影响。
 
+### DCG(Discounted Cumulative Gain)
+DCG假定一个排序结果的总评分由该排序结果中每个document的评分累加得到；而每个document的评分由该document与query的相关度、以及该document在排序结果中的位置决定。DCG的公式如下
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/DCG.png)
+上式中，p代表DCG是针对排序结果前p个documents计算得到的；reli代表第i个document与query的相关度；分母的log的意义是对每一个document的权重按照位置进行对数衰减。可以看出，DCG既考虑到了document与query的相关度，又考虑到了document的位置因素，因而是排序学习当中比较主流的评估准则。
+### nDCG(normalized DCG)
+在实际应用中，不同query对应的documents列表长度往往差别较大，因此DCG指标需要进行归一化。常用的归一化方法是用原始DCG除以IDCG，其中IDCG是指query对应的前p条documents的完美排序列表的DCG值。原始DCG除以IDCG的结果被称为nDCG(normalized DCG)。
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/IDCG.png)
+可以看出，nDCG的取值范围在0到1之间。
 
-根据损失函数定义方式的不同，L2R可以分为三类：Pointwise方法，Pairwise方法，Listwise方法
-## Pointwise
-
-## Pairwise
-
-## Listwise
+## 学习排序的分类
+理想情况下，学习排序的loss function可定义为1 - nDCG。当nDCG=1的时候为完美排序，此时获得zero loss。不过在实践中，loss function有时会采用简化的定义方式。根据损失函数定义方式的不同，学习排序可以分为三类：Pointwise方法，Pairwise方法，Listwise方法
+### Pointwise
+pointwise的损失函数定义如下
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pointwise-loss.png)
+### Pairwise
+pairwise的损失函数定义如下
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pairwise-loss.png)
+### Listwise
+listwise的损失函数定义如下
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/listwise-loss.png)
 
 [1]: http://times.cs.uiuc.edu/course/598f14/l2r.pdf
 [2]: https://tech.meituan.com/2018/12/20/head-in-l2r.html
