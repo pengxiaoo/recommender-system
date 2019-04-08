@@ -52,11 +52,16 @@ pointwise方法比较简单易行，在实际中应用的也较为广泛。依�
 >* 单一浅层模型：例如LR，FM，SVM。特点是速度快，支持特征的维度高，推荐结果可解释性较好，但是需要特征筛选、特征的归一化和离散化，对工程师的特征工程能力有较高要求。另外LR难以捕获交叉特征的影响。
 >* 树模型：例如随机森林，gbdt。树模型不需要特征归一化和特征筛选，有比较强的特征筛选能力。
 >* gbdt和LR的组合。这个方法源自一篇著名的文章[Practical Lessons from Predicting Clicks on Ads at Facebook][3]，其中gbdt用来抽取特征，LR基于gbdt输出的特征进行分类，省去了人工寻找特征、特征组合的步骤。gbdt和LR的组合在多项评估指标上明显好过单一模型。但是由于经历了两层模型，推荐结果可解释性较差。
->* 神经网络模型：业界主排序模型中，基于神经网络的深度学习模型现在得到了越来越多的采用。例如[美团“猜你喜欢”深度学习排序模型实践][4]这篇文章提到了基于Multi-task DNN的深度学习排序。神经网络模型的表达能力和通用性较强，但是也有推荐结果可解释性差的缺点。
+>* 神经网络模型：如今在业界主排序算法中，基于神经网络的深度学习模型得到了越来越多的采用。例如[美团“猜你喜欢”深度学习排序模型实践][4]这篇文章提到了基于Multi-task DNN的深度学习排序。神经网络模型的表达能力和通用性较强，但是也有推荐结果可解释性差的缺点。
 
 ### Pairwise方法
-pairwise方法的损失函数定义如下
+在pointwise方法中，排序完全基于单个document的独立得分，没有考虑documents之间的顺序。pairwise方法重点判断任意两个document组成的pair即<document1,document2>是否满足顺序关系。pairwise方法的损失函数定义如下
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/pairwise-loss.png)
+其中sign(yi-yj)代表documenti和documentj的顺序先后关系，f(xi)-f(xj)代表documenti和documentj的得分高低关系。
+Φ代表了如果documenti和documentj的顺序先后关系与得分高低关系不兼容，那么需要付出多大的损失。根据Φ的定义方式不同，pairwise方法有不同的实现：
+>* Ranking SVM, Φ定义为hinge loss
+>* RankingBoost，Φ定义为exponential loss
+>* RankingNet，Φ定义为logistic loss
 
 ### Listwise方法
 listwise方法的损失函数定义如下
