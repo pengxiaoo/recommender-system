@@ -57,7 +57,7 @@ pointwise方法比较简单易行，在实际中应用的也最为广泛。依�
 >* 树模型：例如gbdt。树模型不需要特征归一化和人工特征筛选，有比较强的特征筛选能力。
 >* gbdt和LR的组合。这个方法源自2014年著名的[Practical Lessons from Predicting Clicks on Ads at Facebook][3]，其中gbdt用来抽取特征，LR基于gbdt输出的特征进行分类，从而省去了人工寻找特征、特征组合的步骤。gbdt和LR的组合在多项评估指标上明显好过单一模型。但是由于经历了两层模型，推荐结果可解释性较差。
 >* 神经网络模型。如今在业界主排序算法中，基于神经网络的深度学习模型得到了越来越多的采用。例如[美团“猜你喜欢”深度学习排序模型实践][4]这篇文章提到了基于Multi-task DNN的深度学习排序。神经网络模型对特征工程要求不高，具有强大的表达能力和通用性，但是也有推荐结果可解释性差的缺点。
->* LR和神经网络的组合。这个方法源自2016年著名的[Wide & Deep Learning for Recommender Systems][5]。这篇文章中Wide代表LR，Deep代表神经网络。
+>* LR和神经网络的组合。这个方法源自2016年著名的[Wide & Deep Learning for Recommender Systems][5]。这篇文章中Wide代表LR，Deep代表神经网络。LR擅长捕捉强特征以及高维度稀疏特征（例如one-hot vector）中的规律，而神经网络擅长捕捉弱特征和交叉特征中的规律，通过将LR和神经网络联合训练，最终达到超越单一模型的性能。Wide & Deep方法在这篇文章发表之前已经在Google Play当中落地，随着文章的发表，国内一众互联网公司纷纷效仿。
 
 ### Pairwise方法
 在pointwise方法中，排序完全基于单个document的独立得分，没有考虑documents之间的顺序。pairwise方法重点判断任意两个document组成的pair即<document1,document2>是否满足顺序关系。pairwise方法的损失函数定义如下
