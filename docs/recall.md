@@ -72,9 +72,11 @@ FM同时解决了上面两个问题。如下公式，每一个特征Xi被表征�
 
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/FM.png)
 
-FM用<Vi,Vj>作为Wij的估计，这样交叉项的权重个数为k * n，比原来大大减少。另一方面，由于每一个特征Xi都被表示成了向量Vi，那么任何一个包含了Xi的非零组合项XiXh（h != i）都可以用来训练Vi，这样大大缓解了特征稀疏性带来的影响。
+FM用<Vi,Vj>作为Wij的估计，这样交叉项的权重个数为k * n，比原来大大减少。另一方面，由于每一个特征Xi都被表示成了向量Vi，那么任何一个包含了Xi的非零组合项XiXj都可以用来训练Vi，这样大大缓解了特征稀疏性带来的影响。
 
-FFM对FM做出了进一步改进。
+FFM对FM做出了进一步改进。在FM中，一个特征Xi的隐向量表达Vi代表了Xi跟别的特征组合在一起的时候，对形成的组合结果所施加的“影响”或“贡献”。在FM中，每个Xi只有唯一一个Vi。但是实际情况中，Xi跟不同类型特征组合在一起，其对组合结果的影响很有可能是不同的，因此FFM引入了field aware的概念，在FFM中，field代表特征的类型，每一个Xi会有多个Vi，分别对应不同类型的特征。当Xi与一个特征Xj组合在一起的时候，会根据Xj的类型来选择合适的Vi，同样的Xj也会根据Xi的类型来选择合适的Vj。
+
+FFM提出后不久，曾经在一系列数据挖掘竞赛中大放异彩，成为冠军team采用的主力算法。FFM如今在工业界也有广泛的应用，相关的工具包如libffm也比较成熟。
 
 ### 5. Personal Rank
 Personal Rank是一种基于二分图的模型，该模型的提出是受到了著名的Page Rank算法的启发。图中有两类顶点，分别是user顶点和item顶点，图中的每一条边都连接了一个user顶点和一个item顶点。如下图，黑色圆代表user，白色方框代表item，user和item之间的边代表该user对该item产生过行为。
