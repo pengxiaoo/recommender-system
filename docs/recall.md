@@ -80,8 +80,8 @@ item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2v
 [1]:https://arxiv.org/pdf/1603.04259.pdf
 [2]:https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
 
-### 6. content-based recommendation
-除了上述几种召回算法之外，还有一种重要的召回算法叫做基于内容特征的召回，即content-based recommendation。基于内容的召回的思路是：
+### 6. content-based recall
+除了上述几种召回算法之外，还有一种重要的召回算法叫做基于内容特征的召回。基于内容的召回的思路是：
 >* 对user和item分别做feature提取，离线建立user->feature映射表(或者叫正排表或正排索引)和feature->item映射表（或者叫倒排表或倒排索引），加好索引，然后放入数据库或内存
 >* 如果要对某个user做推荐，在线读取user->feature映射表和feature->item映射表，直接构造user->item形成推荐结果
 
@@ -89,8 +89,8 @@ item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2v
 >* 基于keyword的特征提取。包括vocabulary的建立，Named Entity识别，keyword排序，user->keyword映射表和keyword->item映射表的建立。
 >* 基于topic的特征提取。通过提取文本内容的topic，对不同的item按照topic分类，并根据用户的浏览习惯给用户打上感兴趣的topic的标签，把用户和item通过topic联系起来。提取文本topic有多种方式，传统方式有LDA（Latent Dirichlet Allocation），LSA(Latent Semantic Analysis)，现在比较潮的多是基于embedding方式来提取文本的topic，例如word2vec/doc2vec/deep auto encoder等等。值得一提的是，在不同的文献中terminology略有不同，topic有的地方也被叫做concept或者latent factor。
 
-基于内容推荐需要注意的是，对user的feature提取要考虑时间衰减，这是因为user的兴趣和习惯会随着时间发生变化，user近一个月的点击浏览数据会比一年前的点击浏览数据更重要。
+基于内容召回需要注意的是，对user的feature提取要考虑时间衰减，这是因为user的兴趣和习惯会随着时间发生变化，user近一个月的点击浏览数据会比一年前的点击浏览数据更重要。
 
-基于内容推荐的特点：能较好的处理冷启动，新增的item只要有了特征提取就可以推荐出去，新增的user只要有一些固有属性的画像就可以获得推荐；user的推荐结果只跟该user的画像有关，不受别的user的影响；对特征工程有较高要求，需要domain knowlege才能做好user画像和item特征提取。
+基于内容召回的特点：能较好的处理冷启动，新增的item只要有了特征提取就可以推荐出去，新增的user只要有一些固有属性的画像就可以获得推荐；user的推荐结果只跟该user的画像有关，不受别的user的影响；对特征工程有较高要求，需要domain knowlege才能做好user画像和item特征提取。
 
-基于内容的推荐在信息流推荐场景中非常重要，因为新闻类item的时效性极强，新收录的item迫切需要被推出去，过一两天再推效果就会大打折扣。以头条系为例，基于内容的推荐是其推荐系统的核心，头条投入了大量的人力去做特征工程，一个主要原因就是为了做好基于内容的推荐。
+基于内容的召回在信息流推荐场景中非常重要，因为新闻类item的时效性极强，新收录的item迫切需要被推出去，过一两天再推效果就会大打折扣。以头条系为例，基于内容的推荐是其推荐系统的核心，头条投入了大量的人力去做特征工程，一个主要原因就是为了做好基于内容的推荐。
