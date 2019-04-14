@@ -64,13 +64,15 @@ FM（因式分解机）和FFM（进阶版的因式分解机）也是非常常用
 |1 | 男        | 2   |    0 |
 |2 | 男        |   3   |   1   |
 |3 | 女        |    1    |  3  |
->* 如果原始特征已经是高维度并且稀疏的（例如one-hot特征），那么组合特征会更加高维度、更加稀疏，给模型训练带来极大困难。如下图公式，W代表权重，X代表特征(特征的总个数为n)，由于特征的稀疏性，Xi和Xj同时为非零值的情况很稀少，会导致很难训练得到准确的Wij。
+>* 如果原始特征已经是高维度并且稀疏的（例如one-hot特征），那么组合特征会更加高维度、更加稀疏，给模型训练带来极大困难。如下图公式，W代表权重，X代表特征(特征的总个数为n)，交叉项的权重矩阵的维度为(n * n)，非常巨大；并且由于特征的稀疏性，Xi和Xj同时为非零值的情况很稀少，会导致很难训练得到准确的Wij。
 
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/poly2.png)
 
-FM同时解决了上面两个问题。如下公式，Vi代表特征Xi的隐向量（假设其维度为k），<⋅,⋅> 代表两个k维向量的内积。
+FM同时解决了上面两个问题。如下公式，Vi代表特征Xi的隐向量（假设其维度为k，k远远小于n），<⋅,⋅> 代表两个k维向量的内积。
 
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/FM.png)
+
+FM将每一个特征Xi表征成一个k维的向量(Vi1, Vi2, .., Vik)，用<Vi,Vj>作为Wij的估计，这样交叉项的权重个数为k * n，比原来大大减少。
 
 ### 5. Personal Rank
 Personal Rank是一种基于二分图的模型，该模型的提出是受到了著名的Page Rank算法的启发。图中有两类顶点，分别是user顶点和item顶点，图中的每一条边都连接了一个user顶点和一个item顶点。如下图，黑色圆代表user，白色方框代表item，user和item之间的边代表该user对该item产生过行为。
