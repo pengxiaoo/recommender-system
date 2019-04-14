@@ -55,7 +55,24 @@ itemCF和userCF有很多共同的特点，比如都没有学习过程，不需�
 
 隐语义模型的缺点是可解释性较差；另外对于新增的样本没办法增量计算，只能从头批量计算。
 
-### 4. Personal Rank
+### 4. FM(Factorization Machines)和FFM(Field aware Factorization Machines)
+FM（因式分解机）和FFM（进阶版的因式分解机）也是非常常用并且强大的召回算法。FM的提出是为了解决两个问题：
+>* 特征之间往往不是独立的，一些交叉特征往往会对结果产生巨大的影响。例如如下的数据集，每一条data example包含四个特征：用户id，用户性别，运动鞋购买次数，化妆品购买次数。单独看每个特征并没有明显规律，但是如果把用户性别和不同商品购买次数组合起来，就会有明显的规律。但是如何有效的捕捉交叉特征是一个很困难的问题，要么需要相关的domain knowledge来人工制定，要么需要复杂的模型去自动捕捉特征之间的交互关系。
+
+| 用户id| 用户性别        | 运动鞋购买次数   |  化妆品购买次数   |
+| ----- | --------   | -----:  | :----:  |
+|1 | 男        | 2   |    0 |
+|2 | 男        |   3   |   1   |
+|3 | 女        |    1    |  3  |
+>* 如果原始特征已经是高维度并且稀疏的（例如one-hot特征），那么组合特征会更加高维度、更加稀疏，给模型训练带来极大困难。如下图公式，W代表权重，X代表特征(特征的总个数为n)，由于特征的稀疏性，Xi和Xj同时为非零值的情况很稀少，会导致很难训练得到准确的Wij。
+
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/poly2.png)
+
+FM同时解决了上面两个问题。如下公式，Vi代表特征Xi的隐向量（假设其维度为k），<⋅,⋅> 代表两个k维向量的内积。
+
+![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/FM.png)
+
+### 5. Personal Rank
 Personal Rank是一种基于二分图的模型，该模型的提出是受到了著名的Page Rank算法的启发。图中有两类顶点，分别是user顶点和item顶点，图中的每一条边都连接了一个user顶点和一个item顶点。如下图，黑色圆代表user，白色方框代表item，user和item之间的边代表该user对该item产生过行为。
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/personal_rank.png)
 在Personal Rank算法中，找到一个user的topN like，就是找到跟user不直接相连，并且相关度最高的N个item顶点。
@@ -72,7 +89,7 @@ Personal Rank对每一个user进行推荐都要全图迭代，比较耗时。工
 
 注：上面的示例图来自于项亮的《推荐系统实践》一书。
 
-### 5. item2vec
+### 6. item2vec
 item2vec是一篇2016年的论文[item2vec: neural item embedding for collaborative filtering][1]提出的一种召回算法。它针对电商购物场景，模仿NLP里著名的word embedding算法[word2vec][2]，把每个订单对应的购物篮中的所有items视作一个item set，这个item set就相当于word2vec里的一个context window，item set当中的items相当于位于同一个context window内的words。word2vec的目标函数是给定center word下最大化context words的条件概率，而item2vec的目标函数则是给定item set下最大化不同items共现的条件概率。除了目标函数稍有不同之外，item2vec和word2vec的训练方式几乎是一样的，可以直接用现有的word2vec工具包来训练item2vec。论文中拿item2vec和一种基于SVD分解的隐语义模型做性能对比，item2vec在准确率上更胜一筹。
 
 item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2vec套用了一下，把item从高维one-hot vector embedding成低维稠密vector。不过item2vec可以直接在word2vec工具包上训练，不需要太多额外开发工作，这是其一大优势。item2vec适用范围较窄，主要适合的场景是电商中的购物篮分析。
@@ -80,13 +97,17 @@ item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2v
 [1]:https://arxiv.org/pdf/1603.04259.pdf
 [2]:https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
 
-### 6. content-based recommendation
-除了上述几种召回算法之外，还有一种重要的召回算法叫做基于内容特征的召回，即content-based recommendation。基于内容的召回的思路是：
->* 对user和item分别做feature提取，离线建立user->feature映射表和feature->item映射表，加好索引，然后放入数据库或内存
+### 7. content-based recall
+除了上述几种召回算法之外，还有一种重要的召回算法叫做基于内容特征的召回。基于内容的召回的思路是：
+>* 对user和item分别做feature提取，离线建立user->feature映射表(或者叫正排表或正排索引)和feature->item映射表（或者叫倒排表或倒排索引），加好索引，然后放入数据库或内存
 >* 如果要对某个user做推荐，在线读取user->feature映射表和feature->item映射表，直接构造user->item形成推荐结果
 
-不同于之前的召回算法，content-based需要对user进行画像，对item进行特征提取，因此需要较多的数据预处理和特征工程工作。user画像既包括对user浏览点击历史的统计，也包括用户本身的固有属性，例如用户的年龄，性别，职业等；对item的特征提取，主要包括topic和genre的finding，给item打上标签。以文本类的item为例，特征提取可以包括词库表的建立，命名实体识别，关键词排序等等。
+不同于之前的召回算法，content-based需要对user进行画像，对item进行特征提取，因此需要较多的数据预处理和特征工程工作。user画像既包括对user浏览点击历史的统计，也包括用户本身的固有属性，例如用户的年龄，性别，职业等；对item的特征提取，主要包括topic和genre的finding，给item打上标签。以文本类的item为例，特征提取通常分为两类：
+>* 基于keyword的特征提取。包括vocabulary的建立，Named Entity识别，keyword排序，user->keyword映射表和keyword->item映射表的建立。
+>* 基于topic的特征提取。通过提取文本内容的topic，对不同的item按照topic分类，并根据用户的浏览习惯给用户打上感兴趣的topic的标签，把用户和item通过topic联系起来。提取文本topic有多种方式，传统方式有LDA（Latent Dirichlet Allocation），LSA(Latent Semantic Analysis)，现在比较潮的多是基于embedding方式来提取文本的topic，例如word2vec/doc2vec/deep auto encoder等等。值得一提的是，在不同的文献中terminology略有不同，topic有的地方也被叫做concept或者latent factor。
 
-基于内容推荐需要注意的是，对user的feature提取要考虑时间衰减，这是因为user的兴趣和习惯会随着时间发生变化，user近一个月的点击浏览数据会比一年前的点击浏览数据更重要。
+基于内容召回需要注意的是，对user的feature提取要考虑时间衰减，这是因为user的兴趣和习惯会随着时间发生变化，user近一个月的点击浏览数据会比一年前的点击浏览数据更重要。
 
-基于内容推荐的特点：能较好的处理冷启动，新增的item只要有了特征提取就可以推荐出去，新增的user只要有一些固有属性的画像就可以获得推荐；user的推荐结果只跟该user的画像有关，不受别的user的影响；对特征工程有较高要求，有时需要domain knowlege才能做好user画像和item特征提取。
+基于内容召回的特点：能较好的处理冷启动，新增的item只要有了特征提取就可以推荐出去，新增的user只要有一些固有属性的画像就可以获得推荐；user的推荐结果只跟该user的画像有关，不受别的user的影响；对特征工程有较高要求，需要domain knowlege才能做好user画像和item特征提取。
+
+基于内容的召回在信息流推荐场景中非常重要，因为新闻类item的时效性极强，新收录的item迫切需要被推出去，过一两天再推效果就会大打折扣。以头条系为例，基于内容的推荐是其推荐系统的核心，头条投入了大量的人力去做特征工程，一个主要原因就是为了做好基于内容的推荐。
