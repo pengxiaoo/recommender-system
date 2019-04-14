@@ -64,10 +64,12 @@ FM（因式分解机）和FFM（进阶版的因式分解机）也是非常常用
 |1 | 男        | 2   |    0 |
 |2 | 男        |   3   |   1   |
 |3 | 女        |    1    |  3  |
->* 如果原始特征已经是高维度并且稀疏的（例如one-hot特征），那么组合特征会更加高维度、更加稀疏，给模型训练带来极大困难。如下图公式，W代表权重，X代表特征，由于特征的稀疏性，Xi和Xj同时为非零值的情况很稀少，会导致很难训练得到准确的Wij。
+>* 如果原始特征已经是高维度并且稀疏的（例如one-hot特征），那么组合特征会更加高维度、更加稀疏，给模型训练带来极大困难。如下图公式，W代表权重，X代表特征(特征的总个数为n)，由于特征的稀疏性，Xi和Xj同时为非零值的情况很稀少，会导致很难训练得到准确的Wij。
+
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/poly2.png)
 
-FM同时解决了上面两个问题。
+FM同时解决了上面两个问题。如下公式，Vi代表特征Xi的隐向量（假设其维度为k），<⋅,⋅> 代表两个k维向量的内积。
+
 ![Image text](https://github.com/pengxiaoo/recommender-system/blob/master/imgs/FM.png)
 
 ### 5. Personal Rank
