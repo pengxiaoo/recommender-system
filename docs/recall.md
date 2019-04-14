@@ -87,7 +87,6 @@ item2vec看上去比较酷炫，本质上并没有太多创新，只是把word2v
 
 不同于之前的召回算法，content-based需要对user进行画像，对item进行特征提取，因此需要较多的数据预处理和特征工程工作。user画像既包括对user浏览点击历史的统计，也包括用户本身的固有属性，例如用户的年龄，性别，职业等；对item的特征提取，主要包括topic和genre的finding，给item打上标签。以文本类的item为例，特征提取通常分为两类：
 >* 基于keyword的特征提取。包括vocabulary的建立，Named Entity识别，keyword排序，user->keyword映射表和keyword->item映射表的建立。
->* 基于topic的特征提取。通过提取文本内容的topic，对不同的item按照topic分类，并根据用户的浏览习惯给用户打上感兴趣的topic的标签，把用户和item通过topic联系起来。提取文本topic有多种方式，传统方式有LDA（Latent Dirichlet Allocation），LSA(Latent Semantic Analysis)，现在比较潮的多是基于embedding方式来提取文本的topic，例如word2vec/doc2vec/deep auto encoder等等。值得一提的是，在不同的文献中terminology略有不同，topic在也被叫做concept或者latent factor。
 >* 基于topic的特征提取。通过提取文本内容的topic，对不同的item按照topic分类，并根据用户的浏览习惯给用户打上感兴趣的topic的标签，把用户和item通过topic联系起来。提取文本topic有多种方式，传统方式有LDA（Latent Dirichlet Allocation），LSA(Latent Semantic Analysis)，现在比较潮的多是基于embedding方式来提取文本的topic，例如word2vec/doc2vec/deep auto encoder等等。值得一提的是，在不同的文献中terminology略有不同，topic有的地方也被叫做concept或者latent factor。
 
 基于内容推荐需要注意的是，对user的feature提取要考虑时间衰减，这是因为user的兴趣和习惯会随着时间发生变化，user近一个月的点击浏览数据会比一年前的点击浏览数据更重要。
